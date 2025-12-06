@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id                    String   @id
+  name                  String
+  type                  String
+  cost                  Float
+  description           String
+  productionBonus       Float?   @map("production_bonus")
+  capacityBonus         Float?   @map("capacity_bonus")
+  consumptionReduction  Float?   @map("consumption_reduction")
+  replacesGasAppliance  Boolean  @default(false) @map("replaces_gas_appliance")
+  icon                  String
+  isActive              Boolean  @default(true) @map("is_active")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model Subsidy {
+  id          String        @id
+  name        String
+  description String
+  amount      Float
+  isActive    Boolean       @default(true) @map("is_active")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+  appliesTo   SubsidyType[]
+
+  @@map("subsidies")
+}
+
+model SubsidyType {
+  id          Int      @id @default(autoincrement())
+  subsidyId   String   @map("subsidy_id")
+  productType String   @map("product_type")
+  subsidy     Subsidy  @relation(fields: [subsidyId], references: [id], onDelete: Cascade)
+
+  @@unique([subsidyId, productType])
+  @@map("subsidy_types")
+}
+
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  action     String
+  changes    String?
+  timestamp  DateTime @default(now())
+
+  @@map("audit_log")
+}

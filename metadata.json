@@ -1,0 +1,5 @@
+{
+  "name": "EcoHome: Energy Transition Simulator",
+  "description": "A comprehensive web-based simulation game where users manage a household's energy transition, optimizing for cost and sustainability using solar, batteries, and smart upgrades.",
+  "requestFramePermissions": []
+}
